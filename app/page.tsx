@@ -2,13 +2,22 @@ import MainLayout from "@/components/main-layout";
 import { Sidebar } from "@/components/sidebar";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/auth/auth-actions";
-import Image from "next/image";
 
 export default function Home() {
     return (
         <MainLayout>
-            <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-                <Button onClick={signOut}>Logout</Button>
+            <div className="border-b border-border">
+              <div className="p-4 ">
+                <h1 className="text-xl font-bold">Home</h1>
+              </div>
+            </div>
+
+            {/* Tweet Composer */}
+
+
+            {/* Tweet Feed */}
+            <div className="divide-y divide-border">
+              <div className="p-8 text-center text-muted-foreground"><p>No tweets yet. Be the first to tweet!</p></div>
             </div>
         </MainLayout>
     );
