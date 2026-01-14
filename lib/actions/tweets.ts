@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import { getSession } from "../auth/auth-actions"
 import prisma from "../prismaclient"
 
-export async function createTweet(content: string) {
+export async function createTweet(content: string, imageUrl?: string) {
     const session = await getSession()
 
     if(!session?.user){
@@ -14,7 +14,7 @@ export async function createTweet(content: string) {
         const tweet = await prisma.tweet.create({
             data:{
                 content,
-                imageUrl: null,
+                imageUrl,
                 authorId: session.user.id
             }
         })
