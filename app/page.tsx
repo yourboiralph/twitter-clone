@@ -1,5 +1,6 @@
 import MainLayout from "@/components/main-layout";
 import { Sidebar } from "@/components/sidebar";
+import TweetComposer from "@/components/tweet/tweet-composer";
 import Tweet from "@/components/tweets";
 import { Button } from "@/components/ui/button";
 import { getTweets } from "@/lib/actions/tweets";
@@ -18,7 +19,7 @@ export default async function Home() {
             </div>
 
             {/* Tweet Composer */}
-
+            <TweetComposer user={session?.user}/>
 
             {/* Tweet Feed */}
             <div className="divide-y divide-border">
