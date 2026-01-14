@@ -50,3 +50,59 @@ export async function getTweets() {
         return {success: false, error: "Failed to fetch tweets"}
     }
 }
+
+
+export async function getTweetById(tweetId: string) {
+    try {
+        const tweet = await prisma.tweet.findUnique({
+            where: {
+                id: tweetId
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                        avatar: true
+                    }
+                }
+            }
+        })
+
+        if(!tweet) {
+            return {success: false, error: "Tweet Not Found."} 
+        }
+
+        return {success: true, tweet}
+    } catch (error) {
+        console.error("Error getting tweet:", error)
+        return {success: false, error: "Failed to get tweet"}
+    }
+}
+
+
+
+export async function createReplyTweet(tweetId:string, content: string, imageUrl?: string) {
+    const session = await getSession()
+
+    if(!session?.user){
+        redirect("/sign-in")
+    }
+    try {
+        const tweet = await prisma.tweet.create({
+            data:{
+                content,
+                imageUrl,
+                authorId: session.user.id,
+                parentId: tweetId
+            }
+        })
+
+        return {success: true, tweet}
+    } catch (error) {
+        console.error("Error creating tweet:", error)
+        return {success: false, error: "Failed to create tweet"}
+    }
+}
+
