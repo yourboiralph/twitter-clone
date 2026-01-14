@@ -102,6 +102,8 @@ export default function TweetComposer({
             const result = await createTweet(content.trim(), imageUrl)
             if (result.success){
                 setContent("")
+                setSelectedFile(null)
+                setSelectedImage(null)
                 router.refresh()
             }else{
                 toast.error("Failed to create Tweet.")
@@ -124,7 +126,7 @@ export default function TweetComposer({
                     </Avatar>}
 
                     <div className="flex-1 space-y-3">
-                        <Textarea placeholder={placeholder} className="min-h-25 border-0 resize-none text-lg placeholder:text-muted-foreground focus-visible:ring-0 max-w-5xl" maxLength={280} onChange={(e) => setContent(e.target.value)}/>
+                        <Textarea placeholder={placeholder} className="min-h-25 border-0 resize-none text-lg placeholder:text-muted-foreground focus-visible:ring-0 max-w-5xl" maxLength={280} value={content} onChange={(e) => setContent(e.target.value)}/>
 
                         {selectedImage && (
                             <div className="relative">
@@ -155,7 +157,7 @@ export default function TweetComposer({
                                 {/* REPLY FUNCTIONALITY */}
 
 
-                                <Button type="submit" className="rounded-full px-6" disabled={!content.trim() || content.length > 280}>Tweet</Button>
+                                <Button type="submit" className="rounded-full px-6" disabled={!content.trim() || content.length > 280}>{isLoading ? "Posting..." : isUploading ? "Uploading" : "Tweet"}</Button>
                             </div>
                         </div>
                     </div>

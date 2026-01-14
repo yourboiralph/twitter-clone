@@ -1,8 +1,11 @@
+"use client"
+
 
 import { format } from "path";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { formatTimeAgo } from "@/lib/format-tweet-date";
 import { Button } from "./ui/button";
+import { CldImage } from 'next-cloudinary';
 import { Heart, MessageCircle, Repeat2, Share } from "lucide-react";
 import { getInitials } from "@/lib/get-initials";
 
@@ -43,6 +46,14 @@ export default function Tweet({tweet, currentUserId}: TweetProps) {
                     <p className="text-foreground whitespace-pre-wrap">{tweet.content}</p>
 
                     {/* Images */}
+                    {tweet.imageUrl && (
+                        <div className="mt-3">
+                            <CldImage src={tweet.imageUrl} alt="Tweet image" width={800} height={600}
+                            className="max-w-full max-h-96 rounded-lg object-cover"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        </div>
+                    )}
 
                     <div className="flex items-center space-x-6 text-muted-foreground">
                         <Button variant={"ghost"} className="flex items-center space-x-2 hover:text-primary">
