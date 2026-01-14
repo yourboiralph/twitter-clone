@@ -29,7 +29,7 @@ export default function Tweet({tweet, currentUserId}: TweetProps) {
         <div className="p-4 hover:bg-muted/50 cursor-pointer border-b border-border">
             <div className="flex space-x-3">
                 <Avatar className="h-10 w-10">
-                    <AvatarImage src={tweet.author.avatar ?? ""}/>
+                    <AvatarImage src={tweet.author.avatar ?? undefined}/>
                     <AvatarFallback>{getInitials(tweet.author.name)}</AvatarFallback>
                 </Avatar>
 
