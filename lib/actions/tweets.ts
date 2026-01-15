@@ -81,6 +81,31 @@ export async function getTweetById(tweetId: string) {
     }
 }
 
+export async function getTweetReplies(tweetId: string) {
+    try {
+        const replies = await prisma.tweet.findMany({
+            where: {
+                parentId: tweetId
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                        avatar: true
+                    }
+                }
+            }
+        })
+
+        return {success: true, replies}
+    } catch (error) {
+        console.error("Error getting tweet replies:", error)
+        return {success: false, error: "Failed to get tweet replies"}
+    }
+}
+
 
 
 export async function createReplyTweet(tweetId:string, content: string, imageUrl?: string) {

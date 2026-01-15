@@ -1,10 +1,11 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Tweet from "../tweets";
 import TweetComposer from "./tweet-composer";
+import Link from "next/link";
 
 interface TweetDetailProps {
     tweet: {
@@ -18,10 +19,22 @@ interface TweetDetailProps {
             username?: string | null;
             avatar?: string | null;
             image?: string | null;
-        }
-    },
-    replies: null,
-    currentUserId: string
+        };
+    };
+    replies: Array<{
+        id: string;
+        content: string;
+        imageUrl?: string | null;
+        createdAt: Date;
+        author: {
+            id: string;
+            name: string;
+            username?: string | null;
+            avatar?: string | null;
+            image?: string | null;
+        };
+    }>;
+    currentUserId: string;
 }
 
 export default function TweetDetail({
@@ -29,23 +42,42 @@ export default function TweetDetail({
     replies,
     currentUserId,
 }: TweetDetailProps) {
+    const router = useRouter();
+    return (
+        <div className="max-w-2xl mx-auto">
+            <div className="flex items-center p-4 border-b border-border">
+                <Button
+                    variant={"ghost"}
+                    size="sm"
+                    onClick={() => router.back()}
+                    className="mr-4"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    <h1 className="text-xl font-bold">Tweet</h1>
+                </Button>
+            </div>
 
-    const router = useRouter()
-    return <div className="max-w-2xl mx-auto">
-        <div className="flex items-center p-4 border-b border-border">
-            <Button variant={"ghost"} size="sm" onClick={() => router.back()} className="mr-4">
-                <ArrowLeft className="h-4 w-4"/>
-                <h1 className="text-xl font-bold">Tweet</h1>
-            </Button>
+            {/* Parent Tweet if this is a reply */}
+
+            {/* Main Tweet */}
+            <Tweet tweet={tweet} />
+
+
+            {/* REPLIES */}
+
+            <div className="divide-y divide-border">
+                {replies.map((reply, key) => (
+                    <Tweet tweet={reply} key={key}/>
+                ))}
+
+
+                {replies.length === 0 && (
+                    <div className="p-8 text-center text-muted-foreground">
+                        <MessageCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p>No replies yet. Be the first to reply!</p>
+                    </div>
+                )}
+            </div>
         </div>
-
-
-        {/* Parent Tweet if this is a reply */}
-
-
-        {/* Main Tweet */}
-        <Tweet tweet={tweet} />
-
-
-    </div>;
+    );
 }
