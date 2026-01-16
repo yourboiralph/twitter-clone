@@ -38,7 +38,8 @@ export async function getTweets() {
                         avatar: true
                     }
                 },
-                likes: true
+                likes: true,
+                retweets: true
             },
             orderBy: {
                 createdAt: "desc"
@@ -68,7 +69,8 @@ export async function getTweetById(tweetId: string) {
                         avatar: true
                     }
                 },
-                likes: true
+                likes: true,
+                retweets: true
             }
         })
 
@@ -98,7 +100,8 @@ export async function getTweetReplies(tweetId: string) {
                         avatar: true
                     }
                 },
-                likes: true
+                likes: true,
+                retweets: true
             }
         })
 
@@ -187,7 +190,7 @@ export async function retweet(tweetId: string) {
     }
 
     try {
-        // check to see if user already liked
+        // check to see if user already retweet
         const existingRetweet = await prisma.retweet.findUnique({
             where: {
                 userId_tweetId: {

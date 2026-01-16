@@ -23,6 +23,10 @@ interface TweetDetailProps {
         likes: Array<{
             id: string,
             userId: string
+        }>,
+        retweets: Array<{
+            id: string,
+            userId: string
         }>
     };
     replies: Array<{
@@ -38,6 +42,10 @@ interface TweetDetailProps {
             image?: string | null;
         };
         likes: Array<{
+            id: string,
+            userId: string
+        }>,
+        retweets: Array<{
             id: string,
             userId: string
         }>

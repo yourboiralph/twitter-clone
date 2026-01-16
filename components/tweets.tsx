@@ -30,7 +30,7 @@ interface TweetProps {
             id: string,
             userId: string
         }>,
-        retweet: Array<{
+        retweets: Array<{
             id: string,
             userId: string
         }>
@@ -46,7 +46,7 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
 
     const isLiked = currentUserId ? tweet.likes.some((like) => like.userId === currentUserId) : false
 
-    const isRetweeted = currentUserId ? tweet.retweet.some((rt) => rt.userId === currentUserId) : false
+    const isRetweeted = currentUserId ? tweet.retweets.some((rt) => rt.userId === currentUserId) : false
 
     async function handleReply() {
         if (pathname === "/"){
@@ -133,7 +133,7 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
                                     alt="Tweet image"
                                     width={800}
                                     height={600}
-                                    className="max-w-full max-h-96 rounded-lg object-cover"
+                                    className="max-w-full h-auto w-full max-h-96 rounded-lg object-cover"
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 />
                             </div>
@@ -156,7 +156,7 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
                                 }}
                                 className="flex items-center space-x-2 hover:text-green-500"
                             >
-                                <Repeat2 className={`h-4 w-4 ${isRetweeted ? "text-green-500 fill-green-500" : ""}`} /> <span>{tweet.retweet.length}</span>
+                                <Repeat2 className={`h-4 w-4 ${isRetweeted ? "text-green-500" : ""}`} /> <span>{tweet.retweets.length}</span>
                             </Button>
 
                             <Button
