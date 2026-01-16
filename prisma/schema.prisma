@@ -22,6 +22,7 @@ model User {
   likes         Like[]
   sessions      Session[]
   tweets        Tweet[]
+  retweets      Retweet[]
 
   @@map("user")
 }
@@ -74,17 +75,18 @@ model Verification {
 }
 
 model Tweet {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   content   String
   imageUrl  String?
-  authorId  String   @map("authorId")
-  parentId  String?  @map("parentId")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  authorId  String    @map("authorId")
+  parentId  String?   @map("parentId")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   likes     Like[]
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  parent    Tweet?   @relation("TweetReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies   Tweet[]  @relation("TweetReplies")
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parent    Tweet?    @relation("TweetReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Tweet[]   @relation("TweetReplies")
+  retweets  Retweet[]
 
   @@map("tweets")
 }
@@ -100,4 +102,17 @@ model Like {
 
   @@unique([userId, tweetId])
   @@map("likes")
+}
+
+model Retweet {
+  id        String   @id @default(uuid())
+  userId    String   @map("userId")
+  tweetId   String   @map("tweetId")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tweetId])
+  @@map("retweets")
 }

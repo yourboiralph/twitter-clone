@@ -11,7 +11,7 @@ import Link from "next/link";
 import TweetComposer from "./tweet/tweet-composer";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { createReplyTweet, likeTweet } from "@/lib/actions/tweets";
+import { createReplyTweet, likeTweet, retweet } from "@/lib/actions/tweets";
 import toast from "react-hot-toast";
 
 interface TweetProps {
@@ -29,6 +29,10 @@ interface TweetProps {
         likes: Array<{
             id: string,
             userId: string
+        }>,
+        retweet: Array<{
+            id: string,
+            userId: string
         }>
     };
 
@@ -41,6 +45,8 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
     const router = useRouter()
 
     const isLiked = currentUserId ? tweet.likes.some((like) => like.userId === currentUserId) : false
+
+    const isRetweeted = currentUserId ? tweet.retweet.some((rt) => rt.userId === currentUserId) : false
 
     async function handleReply() {
         if (pathname === "/"){
@@ -73,6 +79,18 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
 
         } catch (error) {
             console.error("Error liking tweet:", error)
+        }
+    }
+
+    async function handleRetweet() {
+        try {
+            const result = await retweet(tweet.id)
+
+            if(result.success){
+                router.refresh()
+            }
+        } catch (error) {
+            console.error("Error retweeting tweet:", error)
         }
     }
 
@@ -132,9 +150,13 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
 
                             <Button
                                 variant={"ghost"}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleRetweet()
+                                }}
                                 className="flex items-center space-x-2 hover:text-green-500"
                             >
-                                <Repeat2 className="h-4 w-4 " /> <span>2</span>
+                                <Repeat2 className={`h-4 w-4 ${isRetweeted ? "text-green-500 fill-green-500" : ""}`} /> <span>{tweet.retweet.length}</span>
                             </Button>
 
                             <Button

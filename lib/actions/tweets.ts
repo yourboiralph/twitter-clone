@@ -177,3 +177,46 @@ export async function likeTweet(tweetId: string) {
         return {success: false, error: "Failed to like tweet"}
     }
 }
+
+
+export async function retweet(tweetId: string) {
+    const session = await getSession()
+
+    if (!session?.user){
+        redirect('/sign-in')
+    }
+
+    try {
+        // check to see if user already liked
+        const existingRetweet = await prisma.retweet.findUnique({
+            where: {
+                userId_tweetId: {
+                    userId: session.user.id,
+                    tweetId
+                }
+            }
+        })
+
+        if(existingRetweet){
+            //unlike since it exists
+            await prisma.retweet.delete({
+                where: {
+                    id: existingRetweet.id
+                }
+            })
+            return {success: true, action: "unretweet"}
+        }else{
+            await prisma.retweet.create({
+                data: {
+                    userId: session.user.id,
+                    tweetId
+                }
+            })
+            return {success: true, action: "retweet"}
+        }
+
+    } catch (error) {
+        console.error("Error retweeting tweet:", error)
+        return {success: false, error: "Failed to retweeti tweet"}
+    }
+}
