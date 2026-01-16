@@ -20,6 +20,10 @@ interface TweetDetailProps {
             avatar?: string | null;
             image?: string | null;
         };
+        likes: Array<{
+            id: string,
+            userId: string
+        }>
     };
     replies: Array<{
         id: string;
@@ -33,6 +37,10 @@ interface TweetDetailProps {
             avatar?: string | null;
             image?: string | null;
         };
+        likes: Array<{
+            id: string,
+            userId: string
+        }>
     }>;
     currentUserId: string;
 }
@@ -60,14 +68,14 @@ export default function TweetDetail({
             {/* Parent Tweet if this is a reply */}
 
             {/* Main Tweet */}
-            <Tweet tweet={tweet} />
+            <Tweet tweet={tweet} currentUserId={currentUserId} />
 
 
             {/* REPLIES */}
 
             <div className="divide-y divide-border">
                 {replies.map((reply, key) => (
-                    <Tweet tweet={reply} key={key}/>
+                    <Tweet tweet={reply} key={key} currentUserId={currentUserId}/>
                 ))}
 
 

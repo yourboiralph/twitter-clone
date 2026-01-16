@@ -11,7 +11,7 @@ import Link from "next/link";
 import TweetComposer from "./tweet/tweet-composer";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { createReplyTweet } from "@/lib/actions/tweets";
+import { createReplyTweet, likeTweet } from "@/lib/actions/tweets";
 import toast from "react-hot-toast";
 
 interface TweetProps {
@@ -26,6 +26,10 @@ interface TweetProps {
             username?: string | null;
             avatar?: string | null;
         };
+        likes: Array<{
+            id: string,
+            userId: string
+        }>
     };
 
     currentUserId?: string;
@@ -35,6 +39,8 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
     const [showReplyComposer, setShowReplyComposer] = useState<boolean>(false)
     const pathname = usePathname()
     const router = useRouter()
+
+    const isLiked = currentUserId ? tweet.likes.some((like) => like.userId === currentUserId) : false
 
     async function handleReply() {
         if (pathname === "/"){
@@ -58,10 +64,22 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
             }
     }
 
+    async function handleLike() {
+        try {
+            const result = await likeTweet(tweet.id)
+            if (result.success) {
+                router.refresh()
+            }
+
+        } catch (error) {
+            console.error("Error liking tweet:", error)
+        }
+    }
+
     return (
         <>
-            <Link
-                href={`/tweet/${tweet.id}`}
+            <div
+                onClick={() => router.push(`/tweet/${tweet.id}`)}
                 className="p-4 hover:bg-muted/50 cursor-pointer border-b border-border"
             >
                 <div className="flex space-x-3">
@@ -122,8 +140,11 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
                             <Button
                                 variant={"ghost"}
                                 className="flex items-center space-x-2 hover:text-red-500"
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleLike()}}
                             >
-                                <Heart className="h-4 w-4 " /> <span>1</span>
+                                <Heart className={`h-4 w-4 ${isLiked ? "text-red-500 fill-red-500" : ""}`} /> <span>{tweet.likes.length}</span>
                             </Button>
 
                             <Button
@@ -135,7 +156,7 @@ export default function Tweet({ tweet, currentUserId }: TweetProps) {
                         </div>
                     </div>
                 </div>
-            </Link>
+            </div>
 
 
             {/* Reply Composer */}

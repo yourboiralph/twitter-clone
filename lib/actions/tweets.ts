@@ -37,7 +37,8 @@ export async function getTweets() {
                         username: true,
                         avatar: true
                     }
-                }
+                },
+                likes: true
             },
             orderBy: {
                 createdAt: "desc"
@@ -66,7 +67,8 @@ export async function getTweetById(tweetId: string) {
                         username: true,
                         avatar: true
                     }
-                }
+                },
+                likes: true
             }
         })
 
@@ -95,7 +97,8 @@ export async function getTweetReplies(tweetId: string) {
                         username: true,
                         avatar: true
                     }
-                }
+                },
+                likes: true
             }
         })
 
@@ -131,3 +134,46 @@ export async function createReplyTweet(tweetId:string, content: string, imageUrl
     }
 }
 
+
+
+export async function likeTweet(tweetId: string) {
+    const session = await getSession()
+
+    if (!session?.user){
+        redirect('/sign-in')
+    }
+
+    try {
+        // check to see if user already liked
+        const existingLike = await prisma.like.findUnique({
+            where: {
+                userId_tweetId: {
+                    userId: session.user.id,
+                    tweetId
+                }
+            }
+        })
+
+        if(existingLike){
+            //unlike since it exists
+            await prisma.like.delete({
+                where: {
+                    id: existingLike.id
+                }
+            })
+            return {success: true, action: "unliked"}
+        }else{
+            await prisma.like.create({
+                data: {
+                    userId: session.user.id,
+                    tweetId
+                }
+            })
+            return {success: true, action: "liked"}
+        }
+
+    } catch (error) {
+        console.error("Error liking tweet:", error)
+        return {success: false, error: "Failed to like tweet"}
+    }
+}
