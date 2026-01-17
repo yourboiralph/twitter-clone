@@ -1,4 +1,6 @@
 import MainLayout from "@/components/main-layout";
+import ProfileContent from "@/components/profile/profile-content";
+import ProfileHeader from "@/components/profile/profile-header";
 import { getUserProfile } from "@/lib/actions/profile";
 import { getSession } from "@/lib/auth/auth-actions";
 import { redirect } from "next/navigation";
@@ -17,8 +19,6 @@ export default async function ProfilePage({params} : {params: Promise<{username:
         getUserProfile(username)
     ])
 
-    console.log(profileResult)
-
     if(!profileResult.success) {
         return (
             <MainLayout>
@@ -29,9 +29,13 @@ export default async function ProfilePage({params} : {params: Promise<{username:
             </MainLayout>
         )
     }
+
+
+    const user = profileResult.user
     return (
         <MainLayout>
-            <p>Profile Page</p>
+            <ProfileHeader user={user} currentUser={session?.user}/>
+            <ProfileContent />
         </MainLayout>
     )
 }
