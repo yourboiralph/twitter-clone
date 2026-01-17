@@ -201,7 +201,7 @@ export async function retweet(tweetId: string) {
         })
 
         if(existingRetweet){
-            //unlike since it exists
+            //unretweet since it exists
             await prisma.retweet.delete({
                 where: {
                     id: existingRetweet.id
