@@ -31,6 +31,8 @@ export default async function ProfilePage({params} : {params: Promise<{username:
     }
 
 
+
+    {/* TESTTTT */}
     const user = profileResult.user
     return (
         <MainLayout>
