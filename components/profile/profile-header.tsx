@@ -1,14 +1,17 @@
+"use client"
 import { CldImage } from "next-cloudinary"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { getInitials } from "@/lib/get-initials"
 import { Button } from "../ui/button"
 import { Calendar, Edit } from "lucide-react"
+import { useState } from "react"
+import EditProfileModal from "./edit-profile-modal"
 
 interface ProfileHeaderProps {
     user: {
         id: string,
         name: string,
-        username: string,
+        username?: string | null,
         bio?: string | null,
         avatar?: string | null,
         image?: string | null,
@@ -22,11 +25,13 @@ interface ProfileHeaderProps {
     currentUser: {
         id: string,
         name: string,
-        username: string
+        username?: string | null
     }
 }
 
 export default function ProfileHeader({user, currentUser} : ProfileHeaderProps) {
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false)
 
     function formatJoinDate (date: Date) {
         return new Intl.DateTimeFormat("en-US", {
@@ -57,7 +62,7 @@ export default function ProfileHeader({user, currentUser} : ProfileHeaderProps) 
                     </Avatar>
 
                     {isOwnProfile ? (
-                        <Button variant="outline" className="mt-4 z-2"><Edit className="h-4 w-4 mr-2" />Edit Profile</Button>
+                        <Button variant="outline" className="mt-4 z-2" onClick={() => setIsEditModalOpen(true)}><Edit className="h-4 w-4 mr-2" />Edit Profile</Button>
                     ) : (
                         <Button variant="outline" className="mt-4 z-2">Follow</Button>
                     )}
@@ -96,6 +101,9 @@ export default function ProfileHeader({user, currentUser} : ProfileHeaderProps) 
                     </div>
                 </div>
             </div>
+
+
+            <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} user={user} />
         </div>
     )
 }

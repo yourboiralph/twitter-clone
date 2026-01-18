@@ -19,7 +19,9 @@ export default async function ProfilePage({params} : {params: Promise<{username:
         getUserProfile(username)
     ])
 
-    if(!profileResult.success) {
+    const user = profileResult.user
+
+    if(!profileResult.success || !user) {
         return (
             <MainLayout>
                 <div className="p-8 text-center">
@@ -33,7 +35,7 @@ export default async function ProfilePage({params} : {params: Promise<{username:
 
 
     {/* TESTTTT */}
-    const user = profileResult.user
+    
     return (
         <MainLayout>
             <ProfileHeader user={user} currentUser={session?.user}/>
